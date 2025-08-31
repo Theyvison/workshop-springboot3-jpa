@@ -46,4 +46,10 @@ public class UserResource {
                 .noContent() // retorna o status 204 (no content)
                 .build(); // constrói a resposta
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+        obj = userService.update(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
 }

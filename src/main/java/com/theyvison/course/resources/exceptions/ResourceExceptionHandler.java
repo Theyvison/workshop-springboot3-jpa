@@ -1,5 +1,6 @@
 package com.theyvison.course.resources.exceptions;
 
+import com.theyvison.course.services.exceptions.DatabaseException;
 import com.theyvison.course.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,23 @@ import java.time.Instant;
 @ControllerAdvice // Intercepta as exceções lançadas pelos controllers
 public class ResourceExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class) // Intercepta a exceção específica
-    public ResponseEntity<StandardError> resourceNotFound (ResourceNotFoundException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException exception, HttpServletRequest request) {
         String error = "Resource not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError standardError = new StandardError(
+                Instant.now(),
+                status.value(),
+                error,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(DatabaseException.class) // Intercepta a exceção específica
+    public ResponseEntity<StandardError> database(DatabaseException exception, HttpServletRequest request) {
+        String error = "Database error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError standardError = new StandardError(
                 Instant.now(),
                 status.value(),

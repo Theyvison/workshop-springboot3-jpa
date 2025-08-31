@@ -38,4 +38,12 @@ public class UserResource {
                 .toUri(); // converte para URI
         return ResponseEntity.created(uri).body(obj);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity
+                .noContent() // retorna o status 204 (no content)
+                .build(); // constrói a resposta
+    }
 }
